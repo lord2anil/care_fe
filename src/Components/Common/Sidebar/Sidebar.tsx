@@ -1,14 +1,13 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SidebarItem, ShrinkedSidebarItem } from "./SidebarItem";
 import SidebarUserCard from "./SidebarUserCard";
 import NotificationItem from "../../Notifications/NotificationsList";
-import { Dialog, Transition } from "@headlessui/react";
 import useActiveLink from "../../../Common/hooks/useActiveLink";
 import CareIcon from "../../../CAREUI/icons/CareIcon";
+import useConfig from "../../../Common/hooks/useConfig";
+import SlideOver from "../../../CAREUI/interactive/SlideOver";
 
 export const SIDEBAR_SHRINK_PREFERENCE_KEY = "sidebarShrinkPreference";
-
-const DASHBOARD = process.env.REACT_APP_DASHBOARD_URL ?? "";
 
 const LOGO = process.env.REACT_APP_LIGHT_LOGO;
 const LOGO_COLLAPSE =
@@ -19,16 +18,18 @@ type StatelessSidebarProps =
       shrinkable: true;
       shrinked: boolean;
       setShrinked: (state: boolean) => void;
+      onItemClick?: undefined;
     }
   | {
       shrinkable?: false;
       shrinked?: false;
       setShrinked?: undefined;
+      onItemClick: (open: boolean) => void;
     };
 
 const NavItems = [
   { text: "Facilities", to: "/facility", icon: "care-l-hospital" },
-  { text: "Patients", to: "/patients", icon: "care-l-wheelchair" },
+  { text: "Patients", to: "/patients", icon: "care-l-user-injured" },
   { text: "Assets", to: "/assets", icon: "care-l-shopping-cart-alt" },
   { text: "Sample Test", to: "/sample", icon: "care-l-medkit" },
   { text: "Shifting", to: "/shifting", icon: "care-l-ambulance" },
@@ -46,9 +47,11 @@ const StatelessSidebar = ({
   shrinkable = false,
   shrinked = false,
   setShrinked,
+  onItemClick,
 }: StatelessSidebarProps) => {
   const activeLink = useActiveLink();
   const Item = shrinked ? ShrinkedSidebarItem : SidebarItem;
+  const { dashboard_url } = useConfig();
 
   const indicatorRef = useRef<HTMLDivElement>(null);
   const [lastIndicatorPosition, setLastIndicatorPosition] = useState(0);
@@ -131,14 +134,18 @@ const StatelessSidebar = ({
                 {...i}
                 icon={<CareIcon className={`${i.icon} h-5`} />}
                 selected={i.to === activeLink}
+                do={() => onItemClick && onItemClick(false)}
               />
             );
           })}
 
-          <NotificationItem shrinked={shrinked} />
+          <NotificationItem
+            shrinked={shrinked}
+            onClickCB={() => onItemClick && onItemClick(false)}
+          />
           <Item
             text="Dashboard"
-            to={DASHBOARD}
+            to={dashboard_url}
             icon={<CareIcon className="care-l-dashboard text-lg" />}
             external
           />
@@ -191,43 +198,11 @@ interface MobileSidebarProps {
   setOpen: (state: boolean) => void;
 }
 
-export const MobileSidebar = ({ open, setOpen }: MobileSidebarProps) => {
+export const MobileSidebar = (props: MobileSidebarProps) => {
   return (
-    <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={setOpen}>
-        <Transition.Child
-          as={Fragment}
-          enter="ease-in-out duration-500"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in-out duration-500"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-all" />
-        </Transition.Child>
-
-        <div className="fixed inset-0 overflow-hidden">
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="pointer-events-none fixed inset-y-0 left-0 flex max-w-full pr-10">
-              <Transition.Child
-                as={Fragment}
-                enter="transform transition ease-out duration-200"
-                enterFrom="-translate-x-full"
-                enterTo="translate-x-0"
-                leave="transform transition ease-in duration-200"
-                leaveFrom="translate-x-0"
-                leaveTo="-translate-x-full"
-              >
-                <Dialog.Panel className="pointer-events-auto w-screen max-w-fit">
-                  <StatelessSidebar />
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
-        </div>
-      </Dialog>
-    </Transition.Root>
+    <SlideOver {...props} slideFrom="left" onlyChild>
+      <StatelessSidebar onItemClick={props.setOpen} />
+    </SlideOver>
   );
 };
 

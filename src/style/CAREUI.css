@@ -21,7 +21,7 @@
 }
 
 .cui-input-base {
-    @apply text-sm block w-full py-3 px-4 text-black placeholder:text-gray-600 bg-white disabled:bg-gray-200 border border-gray-400 focus:border-primary-400 invalid:border-danger-500 ring-0 focus:ring-1 ring-primary-400 outline-none focus:outline-none shadow-none rounded transition-colors duration-300 !important
+    @apply text-sm block w-full py-3 px-4 text-black placeholder:text-gray-600 bg-white disabled:bg-gray-200 border border-gray-400 focus:border-primary-400 ring-0 focus:ring-1 ring-primary-400 outline-none focus:outline-none shadow-none rounded transition-colors duration-300 !important
 }
 
 .cui-dropdown-base {
@@ -86,5 +86,14 @@
 .cui-input:-webkit-autofill:hover,
 .cui-input:-webkit-autofill:focus,
 .cui-input:-webkit-autofill:active {
+    box-shadow: 0 0 0 40px #f9fafb inset !important;
     -webkit-box-shadow: 0 0 0 40px #f9fafb inset !important;
+}
+
+.cui-slideover-x {
+    @apply w-full md:w-[300px] h-full
+}
+
+.cui-slideover-y {
+    @apply h-full md:h-[300px] w-full
 }
