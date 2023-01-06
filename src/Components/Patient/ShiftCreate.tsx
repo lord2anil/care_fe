@@ -4,7 +4,6 @@ import { FacilitySelect } from "../Common/FacilitySelect";
 import {
   TextInputField,
   ErrorHelperText,
-  PhoneNumberField,
   SelectField,
 } from "../Common/HelperInputFields";
 import * as Notification from "../../Utils/Notifications.js";
@@ -31,6 +30,8 @@ import { goBack } from "../../Utils/utils";
 import { Cancel, Submit } from "../Common/components/ButtonV2";
 import TextAreaFormField from "../Form/FormFields/TextAreaFormField";
 import { FieldLabel } from "../Form/FormFields/FormField";
+import { PhoneNumberFormField } from "../Form/FormFields/PhoneNumberFormField";
+import { FieldChangeEvent } from "../Form/FormFields/Utils";
 const PageTitle = loadable(() => import("../Common/PageTitle"));
 const Loading = loadable(() => import("../Common/Loading"));
 
@@ -171,11 +172,11 @@ export const ShiftCreate = (props: patientShiftProps) => {
     dispatch({ type: "set_form", form });
   };
 
-  const handleTextAreaChange = (e: any) => {
-    const form = { ...state.form };
-    const { name, value } = e;
-    form[name] = value;
-    dispatch({ type: "set_form", form });
+  const handleFieldChange = (event: FieldChangeEvent<unknown>) => {
+    dispatch({
+      type: "set_form",
+      form: { ...state.form, [event.name]: event.value },
+    });
   };
 
   const handleValueChange = (value: any, name: string) => {
@@ -247,7 +248,7 @@ export const ShiftCreate = (props: patientShiftProps) => {
           <CardContent>
             <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
               <div>
-                <FieldLabel>Contact person at the facility*</FieldLabel>
+                <FieldLabel required>Contact person at the facility</FieldLabel>
                 <TextInputField
                   fullWidth
                   name="refering_facility_contact_name"
@@ -260,19 +261,21 @@ export const ShiftCreate = (props: patientShiftProps) => {
               </div>
 
               <div>
-                <PhoneNumberField
-                  label="Contact person phone*"
+                <PhoneNumberFormField
+                  required
+                  name="refering_facility_contact_number"
+                  label="Contact person phone"
                   onlyIndia={true}
                   value={state.form.refering_facility_contact_number}
-                  onChange={(value: any) =>
-                    handleValueChange(value, "refering_facility_contact_number")
-                  }
-                  errors={state.errors.refering_facility_contact_number}
+                  onChange={handleFieldChange}
+                  error={state.errors.refering_facility_contact_number}
                 />
               </div>
 
               <div>
-                <FieldLabel>Name of shifting approving facility*</FieldLabel>
+                <FieldLabel required>
+                  Name of shifting approving facility
+                </FieldLabel>
                 <FacilitySelect
                   multiple={false}
                   facilityType={1300}
@@ -350,7 +353,7 @@ export const ShiftCreate = (props: patientShiftProps) => {
                 <ErrorHelperText error={state.errors.is_up_shift} />
               </div>
               <div className="md:col-span-1">
-                <FieldLabel>Preferred Vehicle*</FieldLabel>
+                <FieldLabel required>Preferred Vehicle</FieldLabel>
                 <SelectField
                   name="preferred_vehicle_choice"
                   variant="outlined"
@@ -364,7 +367,7 @@ export const ShiftCreate = (props: patientShiftProps) => {
                 />
               </div>
               <div className="md:col-span-1">
-                <FieldLabel>Preferred Facility Type*</FieldLabel>
+                <FieldLabel required>Preferred Facility Type</FieldLabel>
                 <SelectField
                   name="assigned_facility_type"
                   variant="outlined"
@@ -378,7 +381,7 @@ export const ShiftCreate = (props: patientShiftProps) => {
                 />
               </div>
               <div className="md:col-span-1">
-                <FieldLabel>Severity of Breathlessness*</FieldLabel>
+                <FieldLabel required>Severity of Breathlessness</FieldLabel>
                 <SelectField
                   name="breathlessness_level"
                   variant="outlined"
@@ -396,10 +399,11 @@ export const ShiftCreate = (props: patientShiftProps) => {
                 <TextAreaFormField
                   rows={5}
                   name="reason"
-                  label="Reason for shift*"
+                  required
+                  label="Reason for shift"
                   placeholder="Type your reason here"
                   value={state.form.reason}
-                  onChange={handleTextAreaChange}
+                  onChange={handleFieldChange}
                   error={state.errors.reason}
                 />
               </div>
@@ -411,7 +415,7 @@ export const ShiftCreate = (props: patientShiftProps) => {
                   label="Any other comments"
                   placeholder="type any extra comments here"
                   value={state.form.comments}
-                  onChange={handleTextAreaChange}
+                  onChange={handleFieldChange}
                   error={state.errors.comments}
                 />
               </div>
