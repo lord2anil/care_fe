@@ -30,6 +30,7 @@ import { goBack } from "../../Utils/utils";
 import { Cancel, Submit } from "../Common/components/ButtonV2";
 import TextAreaFormField from "../Form/FormFields/TextAreaFormField";
 import { FieldLabel } from "../Form/FormFields/FormField";
+import { FieldChangeEvent } from "../Form/FormFields/Utils";
 const Loading = loadable(() => import("../Common/Loading"));
 const PageTitle = loadable(() => import("../Common/PageTitle"));
 
@@ -146,11 +147,11 @@ export const ShiftDetailsUpdate = (props: patientShiftProps) => {
     dispatch({ type: "set_form", form });
   };
 
-  const handleTextAreaChange = (e: any) => {
-    const form = { ...state.form };
-    const { name, value } = e;
-    form[name] = value;
-    dispatch({ type: "set_form", form });
+  const handleFormFieldChange = (event: FieldChangeEvent<unknown>) => {
+    dispatch({
+      type: "set_form",
+      form: { ...state.form, [event.name]: event.value },
+    });
   };
 
   const handleOnSelect = (user: any) => {
@@ -280,7 +281,9 @@ export const ShiftDetailsUpdate = (props: patientShiftProps) => {
                 </div>
               </div>
               <div>
-                <FieldLabel>Name of shifting approving facility*</FieldLabel>
+                <FieldLabel required>
+                  Name of shifting approving facility
+                </FieldLabel>
                 <FacilitySelect
                   multiple={false}
                   name="shifting_approving_facility"
@@ -383,7 +386,7 @@ export const ShiftDetailsUpdate = (props: patientShiftProps) => {
                 <ErrorHelperText error={state.errors.is_up_shift} />
               </div>
               <div className="md:col-span-1">
-                <FieldLabel>Preferred Vehicle*</FieldLabel>
+                <FieldLabel required>Preferred Vehicle</FieldLabel>
                 <SelectField
                   name="preferred_vehicle_choice"
                   variant="outlined"
@@ -397,7 +400,7 @@ export const ShiftDetailsUpdate = (props: patientShiftProps) => {
                 />
               </div>
               <div className="md:col-span-1">
-                <FieldLabel>Preferred Facility Type*</FieldLabel>
+                <FieldLabel required>Preferred Facility Type</FieldLabel>
                 <SelectField
                   name="assigned_facility_type"
                   variant="outlined"
@@ -411,7 +414,7 @@ export const ShiftDetailsUpdate = (props: patientShiftProps) => {
                 />
               </div>
               <div className="md:col-span-1">
-                <FieldLabel>Severity of Breathlessness*</FieldLabel>
+                <FieldLabel required>Severity of Breathlessness</FieldLabel>
                 <SelectField
                   name="breathlessness_level"
                   variant="outlined"
@@ -427,10 +430,11 @@ export const ShiftDetailsUpdate = (props: patientShiftProps) => {
                 <TextAreaFormField
                   rows={5}
                   name="reason"
-                  label="Reason for shift*"
+                  required
+                  label="Reason for shift"
                   placeholder="Type your reason here"
                   value={state.form.reason}
-                  onChange={handleTextAreaChange}
+                  onChange={handleFormFieldChange}
                   error={state.errors.reason}
                 />
               </div>
@@ -442,7 +446,7 @@ export const ShiftDetailsUpdate = (props: patientShiftProps) => {
                   label="Any other comments"
                   placeholder="type any extra comments here"
                   value={state.form.comments}
-                  onChange={handleTextAreaChange}
+                  onChange={handleFormFieldChange}
                   error={state.errors.comments}
                 />
               </div>
