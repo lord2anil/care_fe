@@ -113,7 +113,7 @@ const ShiftCard = ({ shift, filter }: any) => {
                 >
                   <i className="fas fa-plane-departure mr-2"></i>
                   <dd className="font-bold text-sm leading-5 text-gray-900 break-normal">
-                    {(shift.orgin_facility_object || {}).name}
+                    {(shift.origin_facility_object || {}).name}
                   </dd>
                 </dt>
               </div>
@@ -309,7 +309,7 @@ export default function ShiftingBoard({
     board,
     dispatch,
     filterProp.facility,
-    filterProp.orgin_facility,
+    filterProp.origin_facility,
     filterProp.shifting_approving_facility,
     filterProp.assigned_facility,
     filterProp.emergency,

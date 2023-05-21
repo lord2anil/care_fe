@@ -28,8 +28,8 @@ import useMergeState from "../../Common/hooks/useMergeState";
 import { useTranslation } from "react-i18next";
 
 const clearFilterState = {
-  orgin_facility: "",
-  orgin_facility_ref: "",
+  origin_facility: "",
+  origin_facility_ref: "",
   shifting_approving_facility: "",
   shifting_approving_facility_ref: "",
   assigned_facility: "",
@@ -65,8 +65,8 @@ export default function ListFilter(props: any) {
   ).map((option) => option.text);
 
   const [filterState, setFilterState] = useMergeState({
-    orgin_facility: filter.orgin_facility || "",
-    orgin_facility_ref: null,
+    origin_facility: filter.origin_facility || "",
+    origin_facility_ref: null,
     shifting_approving_facility: filter.shifting_approving_facility || "",
     shifting_approving_facility_ref: null,
     assigned_facility: filter.assigned_facility || "",
@@ -91,13 +91,13 @@ export default function ListFilter(props: any) {
 
   useEffect(() => {
     async function fetchData() {
-      if (filter.orgin_facility) {
+      if (filter.origin_facility) {
         setOriginLoading(true);
         const res = await dispatch(
-          getAnyFacility(filter.orgin_facility, "orgin_facility")
+          getAnyFacility(filter.origin_facility, "origin_facility")
         );
         if (res && res.data) {
-          setFilterState({ orgin_facility_ref: res.data });
+          setFilterState({ origin_facility_ref: res.data });
         }
         setOriginLoading(false);
       }
@@ -196,7 +196,7 @@ export default function ListFilter(props: any) {
 
   const applyFilter = () => {
     const {
-      orgin_facility,
+      origin_facility,
       shifting_approving_facility,
       assigned_facility,
       emergency,
@@ -215,7 +215,7 @@ export default function ListFilter(props: any) {
       breathlessness_level,
     } = filterState;
     const data = {
-      orgin_facility: orgin_facility || "",
+      origin_facility: origin_facility || "",
       shifting_approving_facility: shifting_approving_facility || "",
       assigned_facility: assigned_facility || "",
       emergency: emergency || "",
@@ -295,9 +295,9 @@ export default function ListFilter(props: any) {
           ) : (
             <FacilitySelect
               multiple={false}
-              name="orgin_facility"
-              selected={filterState.orgin_facility_ref}
-              setSelected={(obj) => setFacility(obj, "orgin_facility")}
+              name="origin_facility"
+              selected={filterState.origin_facility_ref}
+              setSelected={(obj) => setFacility(obj, "origin_facility")}
               className="shifting-page-filter-dropdown"
               errors={""}
             />

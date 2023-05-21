@@ -75,7 +75,7 @@ const ResourceCard = ({ resource }: any) => {
                 >
                   <i className="fas fa-plane-departure mr-2"></i>
                   <dd className="font-bold text-sm leading-5 text-gray-900">
-                    {(resource.orgin_facility_object || {}).name}
+                    {(resource.origin_facility_object || {}).name}
                   </dd>
                 </dt>
               </div>
@@ -216,7 +216,7 @@ export default function ResourceBoard({
     board,
     dispatch,
     filterProp.facility,
-    filterProp.orgin_facility,
+    filterProp.origin_facility,
     filterProp.approving_facility,
     filterProp.assigned_facility,
     filterProp.emergency,
